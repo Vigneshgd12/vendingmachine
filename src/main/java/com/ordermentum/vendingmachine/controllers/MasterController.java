@@ -20,8 +20,13 @@ public class MasterController {
     }
 
     @PostMapping("/{id}/load")
-    public VendingMachine load(@PathVariable String id,  @RequestBody LoadVendingMachineDTO loadVendingMachineDTO){
-        return service.load(id,loadVendingMachineDTO);
+    public VendingMachine fullLoad(@PathVariable String id,  @RequestBody LoadVendingMachineDTO loadVendingMachineDTO){
+        return service.fullLoad(id,loadVendingMachineDTO);
+    }
+
+    @PatchMapping("/{id}/load")
+    public VendingMachine partialLoad(@PathVariable String id,  @RequestBody LoadVendingMachineDTO loadVendingMachineDTO){
+        return service.partialLoad(id,loadVendingMachineDTO);
     }
 
 }

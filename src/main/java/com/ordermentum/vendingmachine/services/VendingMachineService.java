@@ -9,7 +9,9 @@ public interface VendingMachineService {
 
     String addNewVendingMachine(VendingMachine vendingMachine);
 
-    VendingMachine load(String id, LoadVendingMachineDTO vendingMachine);
+    VendingMachine fullLoad(String id, LoadVendingMachineDTO vendingMachine);
+
+    VendingMachine partialLoad(String id, LoadVendingMachineDTO vendingMachine);
 
     VendingMachine updateVendingMachine(VendingMachine machine);
 }

@@ -4,6 +4,6 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class OutOfStockException  extends RuntimeException {
+public class MaximumInputAmountExceededException extends RuntimeException {
     private String message;
 }

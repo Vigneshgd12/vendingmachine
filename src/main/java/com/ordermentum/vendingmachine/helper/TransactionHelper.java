@@ -52,4 +52,53 @@ public class TransactionHelper {
                 .build()
         );
     }
+
+    public static void returnLocalBalanceAsChange(VendingMachine machine, ReturnChangeDTO changeDTO) {
+        changeDTO.setTenCents(machine.getLocalBalance().getTenCents());
+        changeDTO.setTwentyCents(machine.getLocalBalance().getTwentyCents());
+        changeDTO.setFiftyCents(machine.getLocalBalance().getFiftyCents());
+        changeDTO.setOneDollar(machine.getLocalBalance().getOneDollar());
+        changeDTO.setTwoDollars(machine.getLocalBalance().getTwoDollars());
+    }
+
+    public static void removeLocalBalanceFromCoinsInStock(VendingMachine machine){
+        LocalBalance balance = machine.getLocalBalance();
+        CoinsInStock inStock = machine.getCoinsInStock();
+        machine.setCoinsInStock(
+                CoinsInStock.builder()
+                        .tenCents(inStock.getTenCents()-balance.getTenCents())
+                        .twentyCents(inStock.getTwentyCents()-balance.getTwentyCents())
+                        .fiftyCents(inStock.getFiftyCents()-balance.getFiftyCents())
+                        .oneDollar(inStock.getOneDollar()-balance.getOneDollar())
+                        .twoDollars(inStock.getTwoDollars()-balance.getTwoDollars())
+                        .build()
+        );
+    }
+
+
+
+    public static void addCoinsToStock(VendingMachine machine, CoinsInStock incomingStock){
+        CoinsInStock inStock = machine.getCoinsInStock();
+        machine.setCoinsInStock(
+                CoinsInStock.builder()
+                        .tenCents(inStock.getTenCents()+incomingStock.getTenCents())
+                        .twentyCents(inStock.getTwentyCents()+incomingStock.getTwentyCents())
+                        .fiftyCents(inStock.getFiftyCents()+incomingStock.getFiftyCents())
+                        .oneDollar(inStock.getOneDollar()+incomingStock.getOneDollar())
+                        .twoDollars(inStock.getTwoDollars()+incomingStock.getTwoDollars())
+                        .build()
+        );
+    }
+
+    public static double roundOffDifference(double differenceValue){
+        return Double.parseDouble(format.format(differenceValue));
+    }
+
+    public static void moveReturnChangeToCoinsInStock(ReturnChangeDTO changeDTO, CoinsInStock coinsInStock){
+        coinsInStock.setTenCents(coinsInStock.getTenCents()+changeDTO.getTenCents());
+        coinsInStock.setTwentyCents(coinsInStock.getTwentyCents()+changeDTO.getTwentyCents());
+        coinsInStock.setFiftyCents(coinsInStock.getFiftyCents()+changeDTO.getFiftyCents());
+        coinsInStock.setOneDollar(coinsInStock.getOneDollar()+changeDTO.getOneDollar());
+        coinsInStock.setTwoDollars(coinsInStock.getTwoDollars()+changeDTO.getTwoDollars());
+    }
 }
