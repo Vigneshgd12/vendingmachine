@@ -6,6 +6,8 @@ import com.ordermentum.vendingmachine.services.VendingMachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/vending-machine")
 public class MasterController {
@@ -17,6 +19,16 @@ public class MasterController {
     @PostMapping
     public String addNewVendingMachine(@RequestBody  VendingMachine vendingMachine){
         return service.addNewVendingMachine(vendingMachine);
+    }
+
+    @GetMapping
+    public List<VendingMachine> getAllVendingMachines(){
+        return service.getAllVendingMachines();
+    }
+
+    @GetMapping("/{id}")
+    public VendingMachine getVendingMachineById(@PathVariable  String vendingMachineId){
+        return service.getVendingMachineById(vendingMachineId);
     }
 
     @PostMapping("/{id}/load")

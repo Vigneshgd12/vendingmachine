@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.GeneratedValue;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 public class VendingMachine {
     @Id
+    @GeneratedValue
     private String id;
     @NotNull
     private Address machineAddress;

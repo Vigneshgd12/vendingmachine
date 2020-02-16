@@ -3,6 +3,8 @@ package com.ordermentum.vendingmachine.services;
 import com.ordermentum.vendingmachine.dto.LoadVendingMachineDTO;
 import com.ordermentum.vendingmachine.model.VendingMachine;
 
+import java.util.List;
+
 public interface VendingMachineService {
 
     VendingMachine getVendingMachineById(String id);
@@ -14,4 +16,6 @@ public interface VendingMachineService {
     VendingMachine partialLoad(String id, LoadVendingMachineDTO vendingMachine);
 
     VendingMachine updateVendingMachine(VendingMachine machine);
+
+    List<VendingMachine> getAllVendingMachines();
 }

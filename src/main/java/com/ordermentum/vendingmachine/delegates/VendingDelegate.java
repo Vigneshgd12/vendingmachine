@@ -15,18 +15,25 @@ import com.ordermentum.vendingmachine.services.VendingMachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
+
 import static com.ordermentum.vendingmachine.helper.TransactionHelper.*;
-import static com.ordermentum.vendingmachine.constants.VendingMachineConstants.*;
+
 @Component
 public class VendingDelegate {
 
-    @Autowired
     private VendingMachineService service;
+
+    @Autowired
+    public VendingDelegate(VendingMachineService service){
+        this.service = service;
+    }
 
     public void addLocalBalance(String id, AddLocalBalanceDTO localBalance) {
         VendingMachine machine = service.getVendingMachineById(id);
         LocalBalance updatedLocalBalance = generateLocalBalanceObject(machine.getLocalBalance(),localBalance);
-        if(updatedLocalBalance.getLocalBalanceValue()>50){
+        double maxPrice = machine.getChocolateDetails().stream().max(Comparator.comparing(ChocolateDetail::getPriceOfEach)).get().getPriceOfEach();
+        if(updatedLocalBalance.getLocalBalanceValue() > Math.ceil(maxPrice)){
             throw new MaximumInputAmountExceededException();
         }
         machine.setLocalBalance(updatedLocalBalance);
@@ -42,10 +49,10 @@ public class VendingDelegate {
                 .filter(chocolateDetail -> chocolateDetail.getId().equals(chocolateId))
                 .findFirst().orElseThrow(()-> new InvalidRequestException());
         machine.getChocolateDetails().removeIf(chocolateDetail -> chocolateDetail.getId().equals(chocolateId));
-        return validateAndProcessChocolateSale(chocolateId, machine, invoice, chocolate);
+        return validateAndDispenseChocolate(chocolateId, machine, invoice, chocolate);
     }
 
-    private ChocolateSaleInvoiceDTO validateAndProcessChocolateSale(String chocolateId, VendingMachine machine, ChocolateSaleInvoiceDTO invoice, ChocolateDetail chocolate) {
+    private ChocolateSaleInvoiceDTO validateAndDispenseChocolate(String chocolateId, VendingMachine machine, ChocolateSaleInvoiceDTO invoice, ChocolateDetail chocolate) {
         double localBalance = machine.getLocalBalance().getLocalBalanceValue();
         ReturnChangeDTO changeDTO = resetReturnChange();
         if(chocolate.getPriceOfEach()<=localBalance) {
@@ -54,11 +61,11 @@ public class VendingDelegate {
             }else {
                 double changeToBeReturned = roundOffDifference(localBalance - chocolate.getPriceOfEach());
                 moveLocalBalanceToCoinsInStock(machine);
-                boolean processDistribution = true;
+                boolean allowDispensing = true;
                 if (changeToBeReturned > 0) {
-                    processDistribution = checkProcessDistribution(chocolateId, machine, invoice, changeToBeReturned, changeDTO);
+                    allowDispensing = shouldDispensingBeAllowed(chocolateId, machine, invoice, changeToBeReturned, changeDTO);
                 }
-                if (processDistribution) {
+                if (allowDispensing) {
                     chocolate.setCurrentStock(chocolate.getCurrentStock() - 1);
                     chocolate.setTotalCurrentValue(roundOffDifference(chocolate.getTotalCurrentValue() - chocolate.getPriceOfEach()));
                 }
@@ -82,9 +89,9 @@ public class VendingDelegate {
         return invoice;
     }
 
-    private boolean checkProcessDistribution(String chocolateId, VendingMachine machine,
-                                             ChocolateSaleInvoiceDTO invoice, double changeToBeReturned,
-                                             ReturnChangeDTO changeDTO) {
+    private boolean shouldDispensingBeAllowed(String chocolateId, VendingMachine machine,
+                                              ChocolateSaleInvoiceDTO invoice, double changeToBeReturned,
+                                              ReturnChangeDTO changeDTO) {
         try {
             ReturnChangeHelper.validateChangeAvailablity(machine.getCoinsInStock(),changeDTO,changeToBeReturned);
             invoice.setMessage("Chocolate "+ chocolateId+" has been successfully delivered");

@@ -3,6 +3,7 @@ package com.ordermentum.vendingmachine.model;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
+import javax.persistence.GeneratedValue;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 public class ChocolateDetail {
 
     @Id
+    @GeneratedValue
     private String id;
     @NotNull
     private String chocolateName;
