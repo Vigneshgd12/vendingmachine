@@ -69,6 +69,8 @@ public class ReturnChangeHelper {
             moveReturnChangeToCoinsInStock(change, coinsInStock);
             throw new InSufficientChangeExcepion();
         }
+        change.setTotalChangeReturned(change.getTenCents()*TEN_CENTS_VALUE+ change.getTwentyCents()*TWENTY_CENTS_VALUE+
+                change.getFiftyCents()*FIFTY_CENTS_VALUE+ change.getOneDollar()*ONE_DOLLAR_VALUE+ change.getTwoDollars()*TWO_DOLLARS_VALUE);
         return change;
     }
 }

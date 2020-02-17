@@ -26,7 +26,7 @@ public class MasterController {
         return service.getAllVendingMachines();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{vendingMachineId}")
     public VendingMachine getVendingMachineById(@PathVariable  String vendingMachineId){
         return service.getVendingMachineById(vendingMachineId);
     }

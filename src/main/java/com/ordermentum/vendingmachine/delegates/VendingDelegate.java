@@ -81,9 +81,9 @@ public class VendingDelegate {
     }
 
     private ChocolateSaleInvoiceDTO outOfStockInvoice(VendingMachine machine, ChocolateSaleInvoiceDTO invoice, ReturnChangeDTO changeDTO) {
+        returnLocalBalanceAsChange(machine, changeDTO);
         machine.setLocalBalance(resetLocalBalance());
         service.updateVendingMachine(machine);
-        returnLocalBalanceAsChange(machine, changeDTO);
         invoice.setMessage("The selected chocolate is not in stock. Please select different chocolate");
         invoice.setChange(changeDTO);
         return invoice;

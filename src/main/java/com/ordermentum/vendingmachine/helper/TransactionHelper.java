@@ -59,6 +59,7 @@ public class TransactionHelper {
         changeDTO.setFiftyCents(machine.getLocalBalance().getFiftyCents());
         changeDTO.setOneDollar(machine.getLocalBalance().getOneDollar());
         changeDTO.setTwoDollars(machine.getLocalBalance().getTwoDollars());
+        changeDTO.setTotalChangeReturned(machine.getLocalBalance().getLocalBalanceValue());
     }
 
     public static void removeLocalBalanceFromCoinsInStock(VendingMachine machine){
