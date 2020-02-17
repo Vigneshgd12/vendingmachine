@@ -8,18 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/vending-machine")
+@RequestMapping("/api/v1/vending-machine/{id}")
 public class VendingController {
 
     @Autowired
     private VendingDelegate delegate;
 
-    @PutMapping("/{id}/addLocalBalance")
+    @PutMapping("/coins")
     public void addLocalBalance(@PathVariable String id, @RequestBody  AddLocalBalanceDTO localBalance){
         delegate.addLocalBalance(id, localBalance);
     }
 
-    @PatchMapping("/{id}/chocolate/{chocolateId}")
+    @PatchMapping("/chocolate/{chocolateId}")
     public ChocolateSaleInvoiceDTO sellChocolate(@PathVariable String id, @PathVariable String chocolateId){
         return delegate.sellChocolate(id,chocolateId);
     }

@@ -34,7 +34,7 @@ public class VendingDelegate {
         LocalBalance updatedLocalBalance = generateLocalBalanceObject(machine.getLocalBalance(),localBalance);
         double maxPrice = machine.getChocolateDetails().stream().max(Comparator.comparing(ChocolateDetail::getPriceOfEach)).get().getPriceOfEach();
         if(updatedLocalBalance.getLocalBalanceValue() > Math.ceil(maxPrice)){
-            throw new MaximumInputAmountExceededException();
+            throw new MaximumInputAmountExceededException("excess amount of coins inserted", localBalance);
         }
         machine.setLocalBalance(updatedLocalBalance);
         service.updateVendingMachine(machine);
